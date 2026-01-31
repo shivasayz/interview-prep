@@ -1,15 +1,12 @@
 import { useState } from "react";
 import "./App.css";
 
-/* 
-name, email, city, state, country
-*/
-
 function App() {
   const [userInfo, setUserInfo] = useState([]);
   const [count, setCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
+  // user API URL
   const fetchUserInfo = async (noOfPeople) => {
     try {
       setIsLoading(true);
