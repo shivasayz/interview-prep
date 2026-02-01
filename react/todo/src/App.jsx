@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
+  
+// this is main functional component: Gg
 function App() {
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState(() => {
