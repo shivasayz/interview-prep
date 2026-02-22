@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signupUser } from "./signup.api";
 
 const schema = z.object({
-  fullname: z.string().nonempty("Full name should not be empty"),
+  fullName: z.string().nonempty("Full name should not be empty"),
   email: z.string().email(),
   password: z.string().min(8, "Password must be 8 character long"),
   confirmPassword: z.string().min(8, "Password must be 8 character long"),
@@ -16,14 +17,27 @@ export const SignUp = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<formFields>({
     resolver: zodResolver(schema),
   });
 
   const formSubmit = async (data: formFields) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
+    try {
+      const res = await signupUser(data);
+      alert("Account created successfully!");
+    } catch (error: any) {
+      const errorMsg =
+        error.response?.data?.message?.errmsg ||
+        error.response?.data?.message ||
+        "Signup failed";
+      if (errorMsg.includes("duplicate key") && errorMsg.includes("email")) {
+        setError("email", { message: "Email already exists" });
+      } else {
+        setError("root", { message: errorMsg });
+      }
+    }
   };
 
   return (
@@ -32,18 +46,23 @@ export const SignUp = () => {
         <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
 
         <form onSubmit={handleSubmit(formSubmit)}>
+          {errors.root && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500 rounded-lg text-red-500 text-sm">
+              {errors.root.message}
+            </div>
+          )}
           {/* Full Name */}
           <div className="mb-4">
             <label className="block text-sm mb-1 text-gray-400">
               Full Name
             </label>
             <input
-              {...register("fullname")}
+              {...register("fullName")}
               className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your full name"
             />
             <div className="text-red-500 text-sm mt-1">
-              {errors.fullname?.message}
+              {errors.fullName?.message}
             </div>
           </div>
 

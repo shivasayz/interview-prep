@@ -10,8 +10,8 @@ const messages = [
 ];
 
 export const WelcomeCard = () => {
-  const [message, setMessage] = useState(() =>
-    messages[Math.floor(Math.random() * messages.length)],
+  const [message, setMessage] = useState(
+    () => messages[Math.floor(Math.random() * messages.length)],
   );
 
   const handleNewMessage = () => {
@@ -30,7 +30,7 @@ export const WelcomeCard = () => {
 
         {/* Get Started Button */}
         <Link
-          to="/signup"
+          to="/login"
           className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
         >
           Get Started
