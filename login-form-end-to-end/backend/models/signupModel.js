@@ -41,6 +41,10 @@ const signupSchema = new mongoose.Schema({
   },
 });
 
+signupSchema.methods.checkPassword = async function (incomingPassword) {
+  return await bcrypt.compare(incomingPassword, this.password);
+};
+
 signupSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 12);
